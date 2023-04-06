@@ -1,1 +1,3 @@
 node_modules
+DB=mongodb+srv://Assala:Assala-122@cluster0.rnw3luj.mongodb.net/test
+PORT=5000
