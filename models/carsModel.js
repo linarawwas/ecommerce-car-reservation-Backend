@@ -12,8 +12,8 @@ const carSchema = mongoose.Schema(
       type: String,
       required: [true, "Please enter product name"],
     },
-    image: [
-      {
+    // image: [
+      
         public_id: {
           type: String,
           required: true,
@@ -22,8 +22,8 @@ const carSchema = mongoose.Schema(
           type: String,
           required: true,
         },
-      },
-    ],
+      
+    // ],
     brand: {
       type: String,
       required: true,

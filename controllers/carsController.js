@@ -1,7 +1,7 @@
 import Cars from "../models/carsModel.js";
 import asyncHandler from "express-async-handler";
 import cloudinary from "../utils/cloudinary.js";
-
+import upload from "../utils/multer.js";
 
 //@des   fetch all cars
 //@route GET/api/cars
@@ -33,71 +33,81 @@ const getCarById = asyncHandler(async (req, res) => {
 //@desc  Create a new car
 //@route POST /api/cars
 //@access Private
+
 const createCar = asyncHandler(async (req, res) => {
-  const { name, brand, category, description } = req.body;
-  const image = req.file.path; // get the file path from the uploaded file
-
-  let result;
-
-  try {
-    result = await cloudinary.uploader.upload(image, {
-      folder: "ecommerce",
-    });
-
-    const car = new Cars({
-      name,
-      image: {
-        public_id: result.public_id,
-        url: result.secure_url,
-      },
-      brand,
-      category,
-      description,
-    });
-
-    const createdCar = await car.save();
-
-    res.status(201).json(createdCar);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server error");
-  }
+  upload.single("image")(req, res, async (err) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({ error: err.message });
+    } else {
+      try {
+        // Upload image to cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, { folder: "Cars" });
+        // Create new Car
+        let car = new Cars({
+          name: req.body.name,
+          brand: req.body.brand,
+          category: req.body.category,
+          description: req.body.description,
+          public_id: result.public_id,
+          url: result.secure_url,
+        });
+        // save car details in mongodb
+        await car.save();
+        res.status(200).json({ message: "Car created successfully!", car });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+      }
+    }
+  });
 });
+
 
 //@desc   Update a car
 //@route  PUT /api/cars/:id
 //@access Private/Admin
 const updateCar = asyncHandler(async (req, res) => {
-  const { name, image, brand, category, description } = req.body;
+  try {
+    upload.single("image")(req, res, async (err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ error: err.message });
+      } else {
+        const { name, brand, category, description } = req.body;
+        const car = await Cars.findById(req.params.id);
 
-  let car = await Cars.findById(req.params.id);
+        if (!car) {
+          res.status(404);
+          throw new Error("Car not found");
+        }
 
-  if (car) {
-    // Update car properties
-    car.name = name || car.name;
-    car.brand = brand || car.brand;
-    car.category = category || car.category;
-    car.description = description || car.description;
+        // Update car properties
+        car.name = name || car.name;
+        car.brand = brand || car.brand;
+        car.category = category || car.category;
+        car.description = description || car.description;
 
-    if (image) {
-      // Delete old image from Cloudinary
-      await cloudinary.uploader.destroy(car.image.public_id);
+        if (req.file) {
+          // Delete old image from Cloudinary
+          await cloudinary.uploader.destroy(car.public_id);
 
-      // Upload new image to Cloudinary
-      const result = await cloudinary.uploader.upload(image, {
-        folder: "ecommerce",
-      });
+          // Upload new image to Cloudinary
+          const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: "Cars",
+          });
 
-      car.image.public_id = result.public_id;
-      car.image.url = result.secure_url;
-    }
+          car.public_id = result.public_id;
+          car.url = result.secure_url;
+        }
 
-    const updatedCar = await car.save();
-
-    res.json(updatedCar);
-  } else {
-    res.status(404);
-    throw new Error("Car not found");
+        const updatedCar = await car.save();
+        res.json(updatedCar);
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -107,15 +117,21 @@ const updateCar = asyncHandler(async (req, res) => {
 //@route  DELETE /api/cars/:id
 //@access Private/Admin
 const deleteCar = asyncHandler(async (req, res) => {
-  const car = await Cars.findById(req.params.id);
+  const carId = req.params.id;
 
-  if (car) {
-    await car.remove();
-    res.json({ message: "Car removed" });
-  } else {
+  const car = await Cars.findById(carId);
+  if (!car) {
     res.status(404);
     throw new Error("Car not found");
   }
+
+  // Delete image from Cloudinary
+  await cloudinary.uploader.destroy(car.public_id);
+
+  // Delete car from database
+  await Cars.deleteOne({ _id: carId });
+
+  res.json({ message: "Car removed" });
 });
 
 export { getCars, getCarById, createCar, deleteCar,updateCar };
