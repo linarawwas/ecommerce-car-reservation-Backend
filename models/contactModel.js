@@ -16,6 +16,10 @@ const contactSchema = new mongoose.Schema({
   message: {
     type: String,
     required: true
+  },
+  streetLocation:{
+    type:String,
+    required:true
   }
 });
 
