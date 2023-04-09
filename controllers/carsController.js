@@ -7,14 +7,16 @@ import upload from "../utils/multer.js";
 //@route GET/api/cars
 //@access Public
 const getCars = asyncHandler(async (req, res) => {
-  const keyword = req.query.keyword ? {
-    name:{
-      $regex:req.query.keyword ,
-      $options:'i'
-    }
-  } : {}
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i",
+        },
+      }
+    : {};
 
-  const cars = await Cars.find({...keyword});
+  const cars = await Cars.find({ ...keyword });
   res.json(cars);
 });
 
@@ -32,6 +34,7 @@ const getCarById = asyncHandler(async (req, res) => {
 
 //@desc  Create a new car
 //@route POST /api/cars
+
 //@access Private
 
 const createCar = asyncHandler(async (req, res) => {
@@ -42,7 +45,9 @@ const createCar = asyncHandler(async (req, res) => {
     } else {
       try {
         // Upload image to cloudinary
-        const result = await cloudinary.uploader.upload(req.file.path, { folder: "Cars" });
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "Cars",
+        });
         // Create new Car
         let car = new Cars({
           name: req.body.name,
@@ -62,7 +67,6 @@ const createCar = asyncHandler(async (req, res) => {
     }
   });
 });
-
 
 //@desc   Update a car
 //@route  PUT /api/cars/:id
@@ -111,8 +115,6 @@ const updateCar = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 //@desc   Delete a car
 //@route  DELETE /api/cars/:id
 //@access Private/Admin
@@ -134,4 +136,4 @@ const deleteCar = asyncHandler(async (req, res) => {
   res.json({ message: "Car removed" });
 });
 
-export { getCars, getCarById, createCar, deleteCar,updateCar };
+export { getCars, getCarById, createCar, deleteCar, updateCar };
