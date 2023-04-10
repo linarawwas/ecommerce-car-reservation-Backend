@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+//models for contact
 const contactSchema = new mongoose.Schema({
   name: {
     type: String,
