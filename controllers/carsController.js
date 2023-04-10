@@ -16,7 +16,9 @@ const getCars = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const cars = await Cars.find({ ...keyword });
+  const category = req.query.category ? { category: req.query.category } : {};
+
+  const cars = await Cars.find({ ...keyword, ...category }).sort({ category: 1 });
   res.json(cars);
 });
 
