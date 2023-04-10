@@ -4,7 +4,10 @@ import db from "./config/db.js";
 import bodyParser from "body-parser";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import carsRoute from "./routes/carsRoute.js";
-import cors from 'cors';
+import cors from 'cors';;
+
+import contactRoute from './routes/contactRoute.js';
+
 
 // Load environment variables
 dotenv.config();
@@ -22,6 +25,11 @@ app.use(bodyParser.json());
 
 // Set up routes
 app.use("/api/cars", carsRoute);
+app.use('/api/contact', contactRoute);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+
 
 // Set up error handling middleware
 app.use(notFound);
