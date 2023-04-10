@@ -5,6 +5,8 @@ import bodyParser from "body-parser";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import carsRoute from "./routes/carsRoute.js";
 import cors from 'cors';;
+import aboutRoute from "./routes/aboutRoute.js";
+import testimonialRoute from "./routes/testimonialRoute.js";
 
 import contactRoute from './routes/contactRoute.js';
 
@@ -26,6 +28,8 @@ app.use(bodyParser.json());
 // Set up routes
 app.use("/api/cars", carsRoute);
 app.use('/api/contact', contactRoute);
+app.use("/about", aboutRoute);
+app.use("/testimonial", testimonialRoute);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -40,3 +44,18 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`API IS RUNNING ON PORT: ${port}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
