@@ -7,8 +7,9 @@ import carsRoute from "./routes/carsRoute.js";
 import cors from 'cors';;
 import aboutRoute from "./routes/aboutRoute.js";
 import testimonialRoute from "./routes/testimonialRoute.js";
-
+import reservationRoute from './routes/reservationRoute.js'
 import contactRoute from './routes/contactRoute.js';
+import userRoute from './routes/userRoute.js';
 
 
 // Load environment variables
@@ -30,8 +31,8 @@ app.use("/api/cars", carsRoute);
 app.use('/api/contact', contactRoute);
 app.use("/about", aboutRoute);
 app.use("/testimonial", testimonialRoute);
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use('/api/Reservations', reservationRoute);
+app.use('/api/user', userRoute);
 
 
 
@@ -44,18 +45,3 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`API IS RUNNING ON PORT: ${port}`);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
