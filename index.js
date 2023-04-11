@@ -1,25 +1,21 @@
 import express from "express";
 import dotenv from "dotenv";
 import db from "./config/db.js";
+import reservationRoute from './routes/reservationRoute.js'
+import cors from 'cors';
+import morgan from 'morgan';
+import userRoute from './routes/userRoute.js';
 import bodyParser from "body-parser";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import carsRoute from "./routes/carsRoute.js";
-import cors from 'cors';;
-import aboutRoute from "./routes/aboutRoute.js";
-import testimonialRoute from "./routes/testimonialRoute.js";
-import reservationRoute from './routes/reservationRoute.js'
-import contactRoute from './routes/contactRoute.js';
-import userRoute from './routes/userRoute.js';
-
 
 // Load environment variables
 dotenv.config();
-
-// Create Express app
-const app = express();
-
-// Connect to database
 await db();
+const app = new express();
+const PORT = process.env.PORT || 5000;
+
+app.use(express.json());
 
 // Set up middleware
 app.use(cors());
@@ -40,8 +36,16 @@ app.use('/api/user', userRoute);
 app.use(notFound);
 app.use(errorHandler);
 
+// Set up routes
+app.use("/api/cars", carsRoute);
+app.use('/api/user', userRoute);
+app.use('/api/reservation', reservationRoute);
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan('dev'));
+}
+
 // Start server
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log(`API IS RUNNING ON PORT: ${port}`);
+app.listen(PORT, () => {
+  console.log(`API IS RUNNING ON PORT: ${PORT}`);
 });

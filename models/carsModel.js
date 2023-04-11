@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import Reservation from "./reservationModel";
 const carSchema = mongoose.Schema(
   {
     // user: {
@@ -23,7 +23,8 @@ const carSchema = mongoose.Schema(
           type: String,
           required: true,
         },
-      
+        reservation_id: [{ type: Schema.Types.ObjectId, ref: Reservation }],
+
     // ],
     brand: {
       type: String,
