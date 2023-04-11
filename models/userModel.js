@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-    _id: {
+   _id: {
         type: Number,
         default: null
       },
-      userId: {
+  userId: {
         type: Number,
         unique: true
       },

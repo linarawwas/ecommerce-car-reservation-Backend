@@ -1,66 +1,71 @@
-import Reservation from '../models/reservationModel.js'; 
-import Car from '../models/carsModel.js';
-import User from '../models/userModel.js'; 
+import Reservation from '../models/reservationModel.js';
 
-// Controller function to delete a reservation
-export const deleteReservation = async (req, res) => {
-    const { reservationId } = req.params; // Extract reservation ID from request parameters
-
+// Create a new reservation
+const createReservation = async (req, res) => {
     try {
-        // Find the reservation by ID and remove it from the database
-        const reservation = await Reservation.findByIdAndRemove(reservationId);
-
-        if (!reservation) {
-            return res.status(404).json({ error: 'Reservation not found' });
-        }
-
-        res.status(200).json({ message: 'Reservation deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
-
-
-// Controller function to create a new reservation
-export const createReservation = async (req, res) => {
-    const { userId, carId } = req.body; // Extract user ID and car ID from request body
-
-    try {
-        // Check if the car and user exist in the database
-        const car = await Car.findById(carId);
-        const user = await User.findById(userId);
-
-        if (!car || !user) {
-            return res.status(404).json({ error: 'Car or user not found' });
-        }
-
-        // Create a new reservation with the extracted user ID and car ID
-        const newReservation = new Reservation({ car: carId, user: userId });
-        const reservation = await newReservation.save();
-
+        const { carId, userId } = req.body;
+        const reservation = new Reservation({ carId, userId });
+        await reservation.save();
         res.status(201).json({ message: 'Reservation created successfully', reservation });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to create reservation', errorMessage: error.message });
     }
 };
 
-// Controller function to retrieve reservations with car and user IDs
-export const getReservationsWithCarAndUserIDs = async (req, res) => {
+// Get all reservations
+const getAllReservations = async (req, res) => {
     try {
-        // Retrieve reservations with populated car and user fields
-        const reservations = await Reservation.find({})
-            .populate('car', 'id') // Only retrieve the 'id' field from the Car model
-            .populate('user', 'id'); // Only retrieve the 'id' field from the User model
-
-        // Extract the reservation ID, car ID, and user ID from the populated fields
-        const reservationsWithIDs = reservations.map(reservation => ({
-            reservationId: reservation._id,
-            carId: reservation.car.id,
-            userId: reservation.user.id
-        }));
-
-        res.status(200).json(reservationsWithIDs);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const reservations = await Reservation.find();
+        res.status(200).json({ reservations });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to get reservations', errorMessage: error.message });
     }
 };
+
+// Get a reservation by ID
+const getReservationById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const reservation = await Reservation.findById(id);
+        if (reservation) {
+            res.status(200).json({ reservation });
+        } else {
+            res.status(404).json({ error: 'Reservation not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to get reservation', errorMessage: error.message });
+    }
+};
+
+// Update a reservation by ID
+const updateReservationById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { carId, userId } = req.body;
+        const updatedReservation = await Reservation.findByIdAndUpdate(id, { carId, userId }, { new: true });
+        if (updatedReservation) {
+            res.status(200).json({ message: 'Reservation updated successfully', reservation: updatedReservation });
+        } else {
+            res.status(404).json({ error: 'Reservation not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update reservation', errorMessage: error.message });
+    }
+};
+
+// Delete a reservation by ID
+const deleteReservationById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedReservation = await Reservation.findByIdAndDelete(id);
+        if (deletedReservation) {
+            res.status(200).json({ message: 'Reservation deleted successfully', reservation: deletedReservation });
+        } else {
+            res.status(404).json({ error: 'Reservation not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete reservation', errorMessage: error.message });
+    }
+};
+
+export { createReservation, getAllReservations, getReservationById, updateReservationById, deleteReservationById };
