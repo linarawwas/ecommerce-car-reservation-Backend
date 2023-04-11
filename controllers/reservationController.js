@@ -1,6 +1,6 @@
-import Reservation from '../models/reservationModel'; 
-import Car from '../models/carsModel';
-import User from '../models/userModel'; 
+import Reservation from '../models/reservationModel.js'; 
+import Car from '../models/carsModel.js';
+import User from '../models/userModel.js'; 
 
 // Controller function to delete a reservation
 export const deleteReservation = async (req, res) => {

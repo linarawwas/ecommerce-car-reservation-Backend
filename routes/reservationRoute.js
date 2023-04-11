@@ -1,9 +1,9 @@
 import express from 'express';
 const router = express.Router();
-import controller from '../controllers/reservationController.js';
+import {getReservationsWithCarAndUserIDs, createReservation, deleteReservation} from '../controllers/reservationController.js';
 
-router.get('/', controller.getReservationsWithCarAndUserIDs); 
-router.post('/', controller.createReservation); 
-router.delete('/:id', controller.deleteReservation); 
+router.get('/', getReservationsWithCarAndUserIDs); 
+router.post('/', createReservation); 
+router.delete('/:id', deleteReservation); 
 
 export default router;
