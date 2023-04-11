@@ -29,7 +29,7 @@ app.use(errorHandler);
 // Set up routes
 app.use("/api/cars", carsRoute);
 app.use('/api/user', userRoute);
-app.use('/api/reservations', reservationRoute);
+app.use('/api/reservation', reservationRoute);
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan('dev'));
