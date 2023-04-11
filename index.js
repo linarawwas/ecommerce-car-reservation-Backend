@@ -8,6 +8,9 @@ import userRoute from './routes/userRoute.js';
 import bodyParser from "body-parser";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import carsRoute from "./routes/carsRoute.js";
+import contactRoute from "./routes/contactRoute.js"
+import aboutRoute from "./routes/aboutRoute.js";
+import testimonialRoute from "./routes/testimonialRoute.js";
 
 // Load environment variables
 dotenv.config();

@@ -21,5 +21,3 @@ router.post('/login', loginUser);
 
 
 export default router;
-
-export default router;

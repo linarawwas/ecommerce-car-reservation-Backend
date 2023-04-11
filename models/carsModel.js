@@ -1,47 +1,37 @@
 import mongoose from "mongoose";
-import Reservation from "./reservationModel";
-const carSchema = mongoose.Schema(
-  {
-    // user: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   required: true,
-    //   ref: "User",
-    // },
 
+const { Schema, model } = mongoose;
+
+const carSchema = new Schema(
+  {
     name: {
       type: String,
       required: [true, "Please enter product name"],
     },
-    
-    // image: [
-      
-        public_id: {
-          type: String,
-          required: true,
-        },
-        url: {
-          type: String,
-          required: true,
-        },
-        reservation_id: [{ type: Schema.Types.ObjectId, ref: Reservation }],
 
-    // ],
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+    reservation_id: [
+      { type: Schema.Types.ObjectId, ref: 'Reservation', required: true },
+    ],
+
     brand: {
       type: String,
       required: true,
     },
     category: {
       type: String,
-      required: [true, 'Please select category for this product'],
-      enum:{
-        values:[
-            'BMW',
-            'MERCEDES',
-            'TOYOTA',
-            'ELECTRIC CAR'
-        ],
-        message:'Please select correct catergory for car'
-      }
+      required: [true, "Please select category for this product"],
+      enum: {
+        values: ["BMW", "MERCEDES", "TOYOTA", "ELECTRIC CAR"],
+        message: "Please select correct catergory for car",
+      },
     },
     description: {
       type: String,
@@ -52,6 +42,7 @@ const carSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-const Cars = mongoose.model("Cars", carSchema);
+
+const Cars = model("Cars", carSchema);
 
 export default Cars;
