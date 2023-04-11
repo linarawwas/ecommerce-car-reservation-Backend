@@ -3,20 +3,21 @@ const { Schema, model } = mongoose;
 
 const ReservationSchema = new Schema(
     {
-
-        car_id: {
-            type: String,
+        car: {  // Reference to the Car model
+            type: Schema.Types.ObjectId,
+            ref: 'Car',
             required: true
         },
-        user_id: {
-            type: String,
+        user: {  // Reference to the User model
+            type: Schema.Types.ObjectId,
+            ref: 'User',
             required: true
-        }},
+        }
+    },
     {
         collection: 'reservations',
         timestamps: true,
     }
-
 );
 
 const Reservation = model('Reservation', ReservationSchema);
