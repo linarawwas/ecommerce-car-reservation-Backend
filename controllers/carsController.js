@@ -26,11 +26,11 @@ const getCars = asyncHandler(async (req, res) => {
 //@route GET/api/car
 //@access Public
 const getCarById = asyncHandler(async (req, res) => {
-  const car = await Cars.findById(req.params.id);
+  const car = await Cars.findById(req.params.id).populate('reservation_id');
   if (car) {
     res.json(car);
   } else {
-    throw new Error("Product not found");
+    throw new Error("Car not found");
   }
 });
 
