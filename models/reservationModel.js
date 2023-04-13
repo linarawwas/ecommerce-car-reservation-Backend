@@ -10,10 +10,12 @@ const ReservationSchema = new Schema(
             ref: Car,
             required: true
         },
-        userId: {  // Reference to the User model
-            type: Schema.Types.ObjectId,
+        userId: {  // Reference to the User model using the custom userId field
+            type: Number, // Update to match the field type in your User model
             ref: User,
-            required: true
+            required: true,
+            // Update this path to the appropriate field name in the User model
+            path: 'userId' 
         }
     },
     {
