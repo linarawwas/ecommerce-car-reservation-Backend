@@ -7,7 +7,7 @@ export const createContact = async (req, res) => {
     try {
       console.log(req.body); // add this line to log the request body
       const { name, email, phoneNumber, message , streetLocation } = req.body;
-      if (!name || !email || !phoneNumber || !message || !streetLocation) {
+      if (!name || !email || !phoneNumber || !message ) {
         return res.status(400).json({ error: 'All fields are required' });
       }
       const newContact = await Contact.create({ name, email, phoneNumber, message , streetLocation });

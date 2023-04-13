@@ -20,7 +20,7 @@ const contactSchema = new mongoose.Schema({
   },
   streetLocation:{
     type:String,
-    required:true
+    required:false,
   }
 });
 
