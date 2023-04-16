@@ -50,7 +50,7 @@ const carSchema = new Schema(
       type: String,
       required: [true, "Please select category for this product"],
       enum: {
-        values: ["BMW", "MERCEDES", "TOYOTA", "ELECTRIC CAR"],
+        values: ["BMW", "MERCEDES", "TOYOTA", "ELECTRIC CAR","GMC","FORD","AUDI"],
         message: "Please select correct catergory for car",
       },
     },
