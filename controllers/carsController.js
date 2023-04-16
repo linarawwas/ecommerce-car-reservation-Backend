@@ -53,7 +53,11 @@ const createCar = asyncHandler(async (req, res) => {
         // Create new Car
         let car = new Cars({
           name: req.body.name,
-          brand: req.body.brand,
+          year: req.body.year,
+          stock:req.body.stock,
+          features:req.body.features,
+          mileage:req.body.mileage,
+          price:req.body.price,
           category: req.body.category,
           description: req.body.description,
           public_id: result.public_id,
@@ -80,7 +84,7 @@ const updateCar = asyncHandler(async (req, res) => {
         console.log(err);
         res.status(500).json({ error: err.message });
       } else {
-        const { name, brand, category, description } = req.body;
+        const { name, stock, year, mileage,price,features, category, description } = req.body;
         const car = await Cars.findById(req.params.id);
 
         if (!car) {
@@ -90,7 +94,11 @@ const updateCar = asyncHandler(async (req, res) => {
 
         // Update car properties
         car.name = name || car.name;
-        car.brand = brand || car.brand;
+        car.stock = stock || car.stock;
+        car.mileage = mileage || car.mileage;
+        car.price = price || car.price;
+        car.features = features || car.features;
+        car.year = year || car.year;
         car.category = category || car.category;
         car.description = description || car.description;
 
