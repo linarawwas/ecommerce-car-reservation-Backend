@@ -1,8 +1,8 @@
 import Cars from "../models/carsModel.js";
 import asyncHandler from "express-async-handler";
+import upload from "../utils/multer.js"; // import the multer instance
 import cloudinary from "../utils/cloudinary.js";
-import upload from "../utils/multer.js";
-
+import multer from "multer";
 //@des   fetch all cars
 //@route GET/api/cars
 //@access Public
@@ -40,36 +40,41 @@ const getCarById = asyncHandler(async (req, res) => {
 //@access Private
 
 const createCar = asyncHandler(async (req, res) => {
-  upload.single("image")(req, res, async (err) => {
-    if (err) {
+  upload.single("image")(req, res, async function (err) {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
       console.log(err);
-      res.status(500).json({ error: err.message });
-    } else {
-      try {
-        // Upload image to cloudinary
-        const result = await cloudinary.uploader.upload(req.file.path, {
-          folder: "Cars",
-        });
-        // Create new Car
-        let car = new Cars({
-          name: req.body.name,
-          year: req.body.year,
-          stock:req.body.stock,
-          features:req.body.features,
-          mileage:req.body.mileage,
-          price:req.body.price,
-          category: req.body.category,
-          description: req.body.description,
-          public_id: result.public_id,
-          url: result.secure_url,
-        });
-        // save car details in mongodb
-        await car.save();
-        res.status(200).json({ message: "Car created successfully!", car });
-      } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: error.message });
-      }
+      return res.status(500).json({ error: err.message });
+    } else if (err) {
+      // An unknown error occurred when uploading.
+      console.log(err);
+      return res.status(500).json({ error: err.message });
+    }
+
+    // Everything went fine.
+    // Continue with your route handler.
+    try {
+      // Upload image to cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path);
+      // Create new Car
+      let car = new Cars({
+        name: req.body.name,
+        year: req.body.year,
+        stock:req.body.stock,
+        features:req.body.features,
+        mileage:req.body.mileage,
+        price:req.body.price,
+        category: req.body.category,
+        description: req.body.description,
+        public_id: result.public_id,
+        url: result.secure_url,
+      });
+      // save car details in mongodb
+      await car.save();
+      res.status(200).json({ message: "Car created successfully!", car });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: error.message });
     }
   });
 });
