@@ -29,8 +29,8 @@ app.use(bodyParser.json());
 // Set up routes
 app.use("/api/cars", carsRoute);
 app.use('/api/contact', contactRoute);
-app.use("/about", aboutRoute);
-app.use("/testimonial", testimonialRoute);
+app.use("/api/about", aboutRoute);
+app.use("/api/testimonial", testimonialRoute);
 app.use('/api/Reservations', reservationRoute);
 app.use('/api/user', userRoute);
 app.use("/api/contactAdmin",contactAdminRoute);
