@@ -1,16 +1,12 @@
 import mongoose from 'mongoose';
 //models for contact
 const contactAdminSchema = new mongoose.Schema({
-    // _id: {
-    //   type: String, 
-    //   required: true,
-    //   unique: true
-    // },
-    phoneNumber: {
+   
+    adminPhoneNumber: {
       type: String,
       required: true
     },
-    email: {
+    adminEmail: {
       type: String,
       required: true,
       unique: true
