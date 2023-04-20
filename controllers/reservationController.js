@@ -2,29 +2,6 @@ import Reservation from '../models/reservationModel.js';
 import Cars from '../models/carsModel.js';
 import User from '../models/userModel.js';
 
-// // Create a new reservation
-// const createReservation = async (req, res) => {
-//     try {
-//       // Get user ID from authentication token
-//       const userId = req.user._id;
-  
-//     //   Get car ID from request body
-//       const carId = req.body;
-  
-//     //   Fetch car details from car table
-//       const car = await Cars.findById(carId);
-  
-//     //   Create new reservation with user ID and car details
-
-//       const reservation = new Reservation({ carId: car._id, userId });
-//       await reservation.save();
-  
-//       res.status(201).json({ message: 'Reservation created successfully', reservation });
-//     } catch (error) {
-//       res.status(500).json({ error: 'Failed to create reservation', errorMessage: error.message });
-//     }
-//   };
-
 // Create a new reservation
 const createReservation = async (req, res) => {
     try {

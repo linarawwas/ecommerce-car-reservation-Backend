@@ -23,15 +23,15 @@ export const createUser = async (req, res) => {
   
   
 
-export const getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
-  }
-};
+  export const getAllUsers = async (req, res) => {
+    try {
+      const users = await User.find();
+      res.json(users);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
 
 export const getUserById = async (req, res) => {
   try {
@@ -135,29 +135,38 @@ export const registerUser = async (req, res) => {
     }
   }
 };
-
-
-
-
-
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check for user email
+    if (!email || !password) {
+      res.status(400);
+      throw new Error('Please provide email and password');
+    }
+
     const user = await User.findOne({ email });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      res.json({
-        _id: user._id,
-        email: user.email,
-        password: user.password,
-        token: generateToken(user._id)
-      });
-    } else {
-      res.status(400);
-      throw new Error('Invalid credentials');
+    if (!user) {
+      res.status(404);
+      throw new Error('User not found');
     }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      res.status(401);
+      throw new Error('Invalid email or password');
+    }
+
+    const token = generateToken(user._id);
+
+    res.json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      token
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
@@ -167,7 +176,10 @@ export const loginUser = async (req, res) => {
 
 
 
-//Generate JWT
+
+
+
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET,{
     expiresIn: '30d',

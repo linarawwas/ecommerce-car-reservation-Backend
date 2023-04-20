@@ -21,15 +21,36 @@ const carSchema = new Schema(
       { type: Schema.Types.ObjectId, ref: 'Reservation', required: true },
     ],
 
-    brand: {
+    mileage: {
       type: String,
       required: true,
+    },
+
+    features: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: String,
+      required: true,
+    },
+
+    year: {
+      type: String,
+      required: true,
+    },
+    stock: {
+      type: String,
+      required: true,
+      enum: {
+        values: ["OUT OF STOCK", "IN STOCK"],
+      },
     },
     category: {
       type: String,
       required: [true, "Please select category for this product"],
       enum: {
-        values: ["BMW", "MERCEDES", "TOYOTA", "ELECTRIC CAR"],
+        values: ["BMW", "MERCEDES", "TOYOTA", "ELECTRIC CAR","GMC","FORD","AUDI"],
         message: "Please select correct catergory for car",
       },
     },
