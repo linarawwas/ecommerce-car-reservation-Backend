@@ -25,7 +25,7 @@ export const createContactAdmin = async (req, res) => {
 
 export const getAllContactsAdmin = async (req, res) => {
   try {
-    const contactsAdmin = await ContactAdmin.find();
+    const contactsAdmin = await ContactAdmin.findOne();
     res.json(contactsAdmin);
   } catch (err) {
     console.error(err);
