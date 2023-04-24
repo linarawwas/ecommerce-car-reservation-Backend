@@ -17,7 +17,7 @@ router.get('/getAll',authenticateToken, getAllUsers);
 router.put('/update/:userId',authenticateToken,isAdmin, updateUserById);
 router.delete('/delete/:userId',authenticateToken,isAdmin, deleteUserById);
 
-router.post('/', registerUser);
+router.post('/register', registerUser);
 router.post('/login', loginUser);
 
 
