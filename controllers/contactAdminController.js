@@ -6,11 +6,11 @@ import ContactAdmin from '../models/contactAdminModel.js';
 export const createContactAdmin = async (req, res) => {
     try {
       console.log(req.body); // add this line to log the request body
-      const { phoneNumber, email,  streetLocation   } = req.body;
-      if ( !email || !phoneNumber || !streetLocation ) {
+      const { adminPhoneNumber, adminEmail,  streetLocation   } = req.body;
+      if ( !adminEmail || !adminPhoneNumber || !streetLocation ) {
         return res.status(400).json({ error: 'All fields are required' });
       }
-      const newContactAdmin = await ContactAdmin.create({ phoneNumber, email , streetLocation });
+      const newContactAdmin = await ContactAdmin.create({ adminPhoneNumber, adminEmail , streetLocation });
       console.log(newContactAdmin); // add this line to log the new contactAdmin
       res.status(201).json(newContactAdmin);
     } catch (err) {
@@ -25,7 +25,7 @@ export const createContactAdmin = async (req, res) => {
 
 export const getAllContactsAdmin = async (req, res) => {
   try {
-    const contactsAdmin = await ContactAdmin.find();
+    const contactsAdmin = await ContactAdmin.findOne();
     res.json(contactsAdmin);
   } catch (err) {
     console.error(err);
