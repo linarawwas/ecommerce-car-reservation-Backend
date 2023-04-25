@@ -5,7 +5,7 @@ import User from '../models/userModel.js';
 // Create a new reservation
 const createReservation = async (req, res) => {
     try {
-        const { carId, userId } = req.body; // Extract carId and userId from request body
+        const { carId } = req.body; // Extract carId from request body
 
         // Fetch car details from Cars model using carId
         const car = await Cars.findById(carId);
@@ -13,18 +13,12 @@ const createReservation = async (req, res) => {
             return res.status(404).json({ error: 'Car not found' });
         }
 
-        // Fetch user details from User model using userId
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
         // Create new reservation with carId, userId, and other relevant details
         const reservation = new Reservation({
             carId: car._id,
-            userId: user._id,
+            userId: req.user.id,
             carName: car.name, // Assuming car model has a 'name' field
-            userName:`${user.firstname} ${user.lastname}` // Assuming user model has a 'name' field
+            userName: `${req.user.firstname} ${req.user.lastname}` // Assuming user model has 'firstname' and 'lastname' fields
         });
         await reservation.save();
 
@@ -34,7 +28,6 @@ const createReservation = async (req, res) => {
     }
 };
 
-export default createReservation;
 
 // Get all reservations
 const getAllReservations = async (req, res) => {
