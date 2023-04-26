@@ -18,7 +18,7 @@ export const authenticateToken = async (req, res, next) => {
       res.status(403);
       throw new Error('Invalid token');
     }
-
+     res.locals.userId=decoded.id
     // Get user from the token
     req.user = await User.findById(decoded.id).select('-password');
 

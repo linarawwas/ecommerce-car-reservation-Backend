@@ -1,11 +1,13 @@
 import Reservation from '../models/reservationModel.js';
 import Cars from '../models/carsModel.js';
 import User from '../models/userModel.js';
+import jwt from "jsonwebtoken";
 
 // Create a new reservation
 const createReservation = async (req, res) => {
     try {
         const { carId } = req.body; // Extract carId from request body
+        const userId = res.locals.userId;
 
         // Fetch car details from Cars model using carId
         const car = await Cars.findById(carId);
@@ -13,16 +15,30 @@ const createReservation = async (req, res) => {
             return res.status(404).json({ error: 'Car not found' });
         }
 
+        // Fetch user details from User model using userId 
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         // Create new reservation with carId, userId, and other relevant details
         const reservation = new Reservation({
             carId: car._id,
-            userId: req.user.id,
+            userId: user._id,
             carName: car.name, // Assuming car model has a 'name' field
-            userName: `${req.user.firstname} ${req.user.lastname}` // Assuming user model has 'firstname' and 'lastname' fields
+            userName: `${user.firstname} ${user.lastname}` // Assuming user model has 'firstname' and 'lastname' fields
         });
         await reservation.save();
 
-        res.status(201).json({ message: 'Reservation created successfully', reservation });
+        // Return reservation, car, and user details in the response
+        res.status(201).json({
+            message: 'Reservation created successfully',
+            reservation: {
+                ...reservation.toObject(),
+                car: car.toObject(),
+                user: user.toObject()
+            }
+        });
     } catch (error) {
         res.status(500).json({ error: 'Failed to create reservation', errorMessage: error.message });
     }
@@ -32,6 +48,7 @@ const createReservation = async (req, res) => {
 // Get all reservations
 const getAllReservations = async (req, res) => {
     try {
+        
         const reservations = await Reservation.find().populate('carId').populate('userId');
         res.status(200).json({ reservations });
     } catch (error) {
