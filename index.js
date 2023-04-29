@@ -12,6 +12,7 @@ import contactRoute from "./routes/contactRoute.js";
 import aboutRoute from "./routes/aboutRoute.js";
 import testimonialRoute from "./routes/testimonialRoute.js";
 import contactAdminRoute from "./routes/contactAdminRoute.js";
+import newsletter from "./routes/newsletterRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -34,6 +35,7 @@ app.use("/api/testimonial", testimonialRoute);
 app.use('/api/Reservations', reservationRoute);
 app.use('/api/user', userRoute);
 app.use("/api/contactAdmin",contactAdminRoute);
+app.use("/api/newsletter",newsletter);
 
 
 
