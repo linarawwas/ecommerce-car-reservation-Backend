@@ -19,6 +19,8 @@ export const authenticateToken = async (req, res, next) => {
       throw new Error('Invalid token');
     }
      res.locals.userId=decoded.id
+     res.locals.email=decoded.email
+
     // Get user from the token
     req.user = await User.findById(decoded.id).select('-password');
 
